@@ -3,7 +3,7 @@
     internal class Program
     {
         static void Main(string[] args)
-        {
+        { 
             try
             {
                 Console.WriteLine("Ingrese el dividendo (hasta 150 cifras):");

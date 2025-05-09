@@ -41,6 +41,9 @@ namespace Ejercicio1
             string restoParcial = "";
             string dividendoStr = dividendo.valor;
 
+            Console.WriteLine("\nProceso de división paso a paso:");
+            Console.WriteLine($"Dividendo inicial: {dividendo}, Divisor: {divisor}");
+
             for (int i = 0; i < dividendoStr.Length; i++)
             {
                 restoParcial += dividendoStr[i];
@@ -50,14 +53,22 @@ namespace Ejercicio1
                 int digito = 0;
                 NumeroGrande restoActual = new NumeroGrande(restoParcial);
 
+                Console.WriteLine($"\nPaso {i + 1}:");
+                Console.WriteLine($"Resto parcial actual: {restoActual}");
+                Console.WriteLine($"Divisor: {divisor}");
+
                 while (Comparar(restoActual, divisor) >= 0)
                 {
                     restoActual = Restar(restoActual, divisor);
                     digito++;
+                    Console.WriteLine($"Resto después de substraer: {restoActual}");
                 }
 
                 cociente.Append(digito);
                 restoParcial = restoActual.valor;
+
+                Console.WriteLine($"Cociente parcial: {cociente.ToString().TrimStart('0')}");
+                Console.WriteLine($"Resto para siguiente iteración: {restoParcial}");
             }
 
             string resultado = cociente.ToString().TrimStart('0');
