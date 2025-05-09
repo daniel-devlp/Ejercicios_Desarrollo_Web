@@ -56,8 +56,8 @@ namespace Ejercicio6
             }
             if (balance != 0) return false;
 
-            // Verificar operadores válidos
-            if (new Regex(@"[+\-*/.]{2,}").IsMatch(expresion))
+            // Verificar operadores válidos (permitir - al inicio)
+            if (new Regex(@"(^|[+\-*/[(])([+\*/])").IsMatch(expresion))
                 return false;
 
             return true;
@@ -73,6 +73,7 @@ namespace Ejercicio6
             {
                 if (char.IsDigit(expresion[i]) || expresion[i] == '.')
                 {
+                    // Capturar números (enteros o decimales)
                     string numero = "";
                     while (i < expresion.Length && (char.IsDigit(expresion[i]) || expresion[i] == '.'))
                     {
@@ -93,9 +94,25 @@ namespace Ejercicio6
                     operadores.Pop();
                     i++;
                 }
+                else if (expresion[i] == '-' && (i == 0 || expresion[i - 1] == '(' || EsOperador(expresion[i - 1])))
+                {
+                    // Manejar signo negativo unario
+                    i++;
+                    if (i < expresion.Length && (char.IsDigit(expresion[i]) || expresion[i] == '.'))
+                    {
+                        string numero = "-";
+                        while (i < expresion.Length && (char.IsDigit(expresion[i]) || expresion[i] == '.'))
+                        {
+                            numero += expresion[i++];
+                        }
+                        output.Add(numero);
+                    }
+                }
                 else
                 {
-                    while (operadores.Count > 0 && Precedencia(expresion[i]) <= Precedencia(operadores.Peek()))
+                    // Manejar operadores binarios
+                    while (operadores.Count > 0 && operadores.Peek() != '(' &&
+                           Precedencia(expresion[i]) <= Precedencia(operadores.Peek()))
                     {
                         output.Add(operadores.Pop().ToString());
                     }
@@ -109,6 +126,12 @@ namespace Ejercicio6
             }
 
             return output;
+        }
+
+        // Método auxiliar para detectar operadores
+        private static bool EsOperador(char c)
+        {
+            return c == '+' || c == '-' || c == '*' || c == '/';
         }
 
         private static double EvaluarPostfijo(List<string> tokens)
